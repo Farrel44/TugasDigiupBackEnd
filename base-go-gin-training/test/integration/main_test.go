@@ -37,8 +37,9 @@ var (
 	dummyAdmin  *dao.Person
 	dummyMember *dao.Person
 
-	accountRepo *repository.AccountRepository
-	personRepo  *repository.PersonRepository
+	accountRepo   *repository.AccountRepository
+	personRepo    *repository.PersonRepository
+	publisherRepo *repository.PublisherRespository
 )
 
 func TestMain(m *testing.M) {
@@ -64,6 +65,7 @@ func setup() {
 	repository.SetupRepositories()
 	accountRepo = repository.GetAccountRepo()
 	personRepo = repository.GetPersonRepo()
+	publisherRepo = repository.GetPublisherRepo()
 
 	a := createDummyAccount()
 	dummyAdmin = createDummyProfile(a)

@@ -7,7 +7,7 @@ type PublisherCreateReq struct {
     City string `json:"city" binding:"required,max=32,min=2"`
 }
 
-func (v PublisherCreateReq) ToEntity() dao.Publisher {
+func (v *PublisherCreateReq) ToEntity() dao.Publisher {
 	return dao.Publisher{
 		Name : v.Name,
 		City : v.City,
@@ -20,7 +20,7 @@ type PublisherCreateResp struct {
 	City string `json:"city"`
 }
 
-func (v PublisherCreateResp) FromEntity(item *dao.Publisher){
+func (v *PublisherCreateResp) FromEntity(item *dao.Publisher){
 	v.ID = int(item.ID)
 	v.Name = item.Name
 	v.City = item.City

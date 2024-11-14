@@ -23,6 +23,19 @@ func (h *PublisherHandle) Route(app *gin.Engine) {
 	grp.POST("", h.hr.AuthAccess(), h.Create)
 }
 
+// create godoc
+//
+//	@Summary Create new Publisher
+//	@Description Create new Publisher
+//	@Accept json
+//	@Produce json
+//	@Security BearerAuth
+//	@Param newItem body dto.PublisherCreateReq true "Publisher's detail"
+//	@Success 201 {object} dto.SuccessResponse[dto.PublisherCreateResp]
+//	@Failure 401 {object} dto.ErrorResponse
+//	@Failure 422 {object} dto.ErrorResponse
+//	@Failure 500 {object} dto.ErrorResponse
+//	@Router /publishers [post]
 func (h *PublisherHandle) Create(c *gin.Context) {
 	var req dto.PublisherCreateReq
 	err := c.ShouldBindJSON(&req)
