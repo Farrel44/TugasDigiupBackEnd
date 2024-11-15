@@ -83,6 +83,7 @@ func teardownDB() {
 		&dao.Account{},
 		&dao.Person{},
 		&dao.Publisher{},
+		&dao.Author{},
 	)
 }
 
@@ -91,6 +92,7 @@ func setupDB() {
 		&dao.Account{},
 		&dao.Person{},
 		&dao.Publisher{},
+		&dao.Author{},
 	)
 }
 

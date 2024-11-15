@@ -2,9 +2,11 @@ package repository
 
 import (
 	"base-gin/app/domain/dao"
+	"base-gin/app/domain/dto"
 	"base-gin/exception"
 	"base-gin/storage"
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -44,4 +46,53 @@ func (r *PublisherRespository) GetByID(id uint) (*dao.Publisher, error) {
 	}
 
 	return &item, nil
+}
+
+func (r *PublisherRespository) GetList(params *dto.Filter) ([]dao.Publisher, error) {
+	ctx, cancelFunc := storage.NewDBContext()
+	defer cancelFunc()
+
+	var items []dao.Publisher
+	tx := r.db.WithContext(ctx)
+
+	if params.Keyword != "" {
+		q := fmt.Sprintf("%%%s%%", params.Keyword)
+		tx = tx.Where("fullname LIKE ?", q)
+	}
+	if params.Start >= 0 {
+		tx = tx.Offset(params.Start)
+	}
+	if params.Limit > 0 {
+		tx = tx.Limit(params.Limit)
+	}
+
+	tx = tx.Order("fullname ASC").Find(&items)
+	if tx.Error != nil && !errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+		return nil, tx.Error
+	}
+
+	return items, nil
+}
+
+func (r *PublisherRespository) Update(params *dto.PublisherUpdateReq) error {
+	ctx, cancelFunc := storage.NewDBContext()
+	defer cancelFunc()
+
+	tx := r.db.WithContext(ctx).Model(&dao.Publisher{}).
+		Where("id = ?", params.ID).
+		Updates(map[string]interface{}{
+			"name": params.Name,
+			"city": params.City,
+		})
+
+	return tx.Error
+}
+
+func (r *PublisherRespository) Delete(id uint) error {
+	ctx, cancelFunc := storage.NewDBContext()
+	defer cancelFunc()
+
+	tx := r.db.WithContext(ctx).Delete(&dao.Publisher{}, id)
+
+	return tx.Error
 }
