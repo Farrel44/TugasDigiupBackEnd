@@ -9,8 +9,7 @@ import (
 
 type Author struct {
 	gorm.Model
-	ID int ``
-	Fullname  string             `gorm:"size:56;not null;"`
-	Gender    *domain.TypeGender `gorm:"type:enum('f','m');not null;"`
-	BirthDate *time.Time
+	Fullname  string             `gorm:"size:56;not null"`
+	Gender    *domain.TypeGender `gorm:"type:enum('f','m');not null;" json:"gender"`
+	BirthDate *time.Time        
 }

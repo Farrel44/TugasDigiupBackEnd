@@ -40,6 +40,7 @@ var (
 	accountRepo   *repository.AccountRepository
 	personRepo    *repository.PersonRepository
 	publisherRepo *repository.PublisherRespository
+	authorRepo    *repository.AuthorRepository
 )
 
 func TestMain(m *testing.M) {
@@ -66,6 +67,7 @@ func setup() {
 	accountRepo = repository.GetAccountRepo()
 	personRepo = repository.GetPersonRepo()
 	publisherRepo = repository.GetPublisherRepo()
+	authorRepo = repository.GetAuthorRepo()
 
 	a := createDummyAccount()
 	dummyAdmin = createDummyProfile(a)

@@ -70,3 +70,34 @@ func (r *AuthorRepository) GetByID(id uint) (*dao.Author, error) {
 
 	return &item, nil
 }
+
+func (r *AuthorRepository) Update(author *dao.Author) error {
+    ctx, cancelFunc := storage.NewDBContext()
+    defer cancelFunc()
+
+    tx := r.db.WithContext(ctx).Model(&dao.Author{}).
+        Where("id = ?", author.ID).
+        Updates(map[string]interface{}{
+            "fullname":  author.Fullname,
+            "gender":    author.Gender,
+            "birth_date": author.BirthDate,
+        })
+
+    return tx.Error
+}
+
+
+func (r *AuthorRepository) Delete(id uint) error {
+	ctx, cancelFunc := storage.NewDBContext()
+	defer cancelFunc()
+	var author dao.Author
+	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&author).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.WithContext(ctx).Where("id = ?", id).Delete(&dao.Author{}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

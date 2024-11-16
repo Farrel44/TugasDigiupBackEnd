@@ -57,7 +57,7 @@ func (r *PublisherRespository) GetList(params *dto.Filter) ([]dao.Publisher, err
 
 	if params.Keyword != "" {
 		q := fmt.Sprintf("%%%s%%", params.Keyword)
-		tx = tx.Where("fullname LIKE ?", q)
+		tx = tx.Where("Name LIKE ?", q)
 	}
 	if params.Start >= 0 {
 		tx = tx.Offset(params.Start)
@@ -66,7 +66,7 @@ func (r *PublisherRespository) GetList(params *dto.Filter) ([]dao.Publisher, err
 		tx = tx.Limit(params.Limit)
 	}
 
-	tx = tx.Order("fullname ASC").Find(&items)
+	tx = tx.Order("Name ASC").Find(&items)
 	if tx.Error != nil && !errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 		return nil, tx.Error
 	}
