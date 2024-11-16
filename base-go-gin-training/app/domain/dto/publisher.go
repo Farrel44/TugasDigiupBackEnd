@@ -28,7 +28,7 @@ func (v *PublisherCreateResp) FromEntity(item *dao.Publisher) {
 }
 
 type PublisherUpdateReq struct {
-	ID   int   `json="-"`
+	ID   int    `json="-"`
 	Name string `json:"name" binding:"required,max=48,min=6"`
 	City string `json:"city" binding:"required,max=32,min=2"`
 }
