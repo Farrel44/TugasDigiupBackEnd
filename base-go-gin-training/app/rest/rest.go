@@ -12,6 +12,8 @@ var (
 	personHandler    *PersonHandler
 	publisherHandler *PublisherHandle
 	authorHandler    *Author
+	bookHandler      *BookHandler
+	borrowHandler    *BorrowHandler
 )
 
 func SetupRestHandlers(app *gin.Engine) {
@@ -26,6 +28,12 @@ func SetupRestHandlers(app *gin.Engine) {
 	authorHandler = NewAuthorHandler(
 		handler, service.GetAuthorService(),
 	)
+	bookHandler = NewBookHandler(
+		handler, service.GetBookService(),
+	)
+	borrowHandler = NewBorrowHandler(
+		handler, service.GetBorrowService(),
+	)
 
 	setupRoutes(app)
 }
@@ -35,4 +43,6 @@ func setupRoutes(app *gin.Engine) {
 	personHandler.Route(app)
 	publisherHandler.Route(app)
 	authorHandler.Route(app)
+	bookHandler.Route(app)
+	borrowHandler.Route(app)
 }

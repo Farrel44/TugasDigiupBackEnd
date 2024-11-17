@@ -11,15 +11,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type BookRepository struct {
+type BorrowRepository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) *BookRepository {
-	return &BookRepository{db: db}
+func NewBorrowRepository(db *gorm.DB) *BorrowRepository {
+	return &BorrowRepository{db: db}
 }
 
-func (r *BookRepository) Create(newItem *dao.Book) error {
+func (r *BorrowRepository) Create(newItem *dao.Borrow) error {
 	ctx, cancelFunc := storage.NewDBContext()
 	defer cancelFunc()
 	tx := r.db.WithContext(ctx).Create(&newItem)
@@ -29,15 +29,15 @@ func (r *BookRepository) Create(newItem *dao.Book) error {
 	return nil
 }
 
-func (r *BookRepository) GetList(params *dto.Filter) ([]dao.Book, error) {
+func (r *BorrowRepository) GetList(params *dto.Filter) ([]dao.Borrow, error) {
 	ctx, cancelFunc := storage.NewDBContext()
 	defer cancelFunc()
 
-	var items []dao.Book
+	var items []dao.Borrow
 	tx := r.db.WithContext(ctx)
 	if params.Keyword != "" {
 		q := fmt.Sprintln("%%%s%%", params.Keyword)
-		tx = tx.Where("Book LIKE ?", q)
+		tx = tx.Where("Borrow LIKE ?", q)
 	}
 	if params.Start >= 0 {
 		tx.Offset(params.Start)
@@ -52,11 +52,11 @@ func (r *BookRepository) GetList(params *dto.Filter) ([]dao.Book, error) {
 	return items, nil
 }
 
-func (r *BookRepository) GetBookByID(id uint) (*dao.Book, error) {
+func (r *BorrowRepository) GetBookByID(id uint) (*dao.Borrow, error) {
 	ctx, cancelFunc := storage.NewDBContext()
 	defer cancelFunc()
 
-	var item dao.Book
+	var item dao.Borrow
 	tx := r.db.WithContext(ctx).First(&item, id)
 	if tx.Error != nil {
 		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
@@ -66,25 +66,25 @@ func (r *BookRepository) GetBookByID(id uint) (*dao.Book, error) {
 	return &item, nil
 }
 
-func (r *BookRepository) Update(author *dao.Book) error {
+func (r *BorrowRepository) Update(borrow *dao.Borrow) error {
 	ctx, cancelFunc := storage.NewDBContext()
 	defer cancelFunc()
 
-	tx := r.db.WithContext(ctx).Model(&dao.Book{}).Where("id = ?", author.ID).Updates(map[string]interface{}{
-		"Title":  author.Title,
-		"gender": author.Subtitle,
+	tx := r.db.WithContext(ctx).Model(&dao.Borrow{}).Where("id = ?", borrow.ID).Updates(map[string]interface{}{
+		"return_date": borrow.ReturnDate,
 	})
+
 	return tx.Error
 }
 
-func (r *BookRepository) Delete(id uint) error {
+func (r *BorrowRepository) Delete(id uint) error {
 	ctx, cancelFunc := storage.NewDBContext()
 	defer cancelFunc()
-	var book dao.Book
-	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&book).Error; err != nil {
+	var BorrowData dao.Borrow
+	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&BorrowData).Error; err != nil {
 		return err
 	}
-	if err := r.db.WithContext(ctx).Where("id = ?", id).Delete(&dao.Book{}).Error; err != nil {
+	if err := r.db.WithContext(ctx).Where("id = ?", id).Delete(&dao.Borrow{}).Error; err != nil {
 		return err
 	}
 	return nil

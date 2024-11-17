@@ -1,24 +1,29 @@
 package dto
 
-import "base-gin/app/domain/dao"
+import (
+	"base-gin/app/domain/dao"
+
+	"gorm.io/gorm"
+)
 
 type BookCreateReq struct {
-	Title       string `json:"title" binding:"size:56;not null;"`
-	Subtitle    string `json:"subtitle" binding:"size:64:"`
-	AuthorID    uint   `json:"AuthorID" binding:"required"`
-	PublisherID uint   `json:"PublisherID" binding:"required"`
+	gorm.Model
+	Title       string `json:"title" binding:"required,max=56"`
+	Subtitle    string `json:"subtitle" binding:"required,max=64"`
+	AuthorID    uint   `json:"author_id" binding:"required"`
+	PublisherID uint   `json:"publisher_id" binding:"required"`
 }
 
-type BookCreateResp struct {
+type BookDetailRes struct {
 	Title       string `json:"title"`
 	Subtitle    string `json:"subtitle"`
-	AuthorID    uint   `json:"AuthorID"`
-	PublisherID uint   `json:"PublisherID"`
+	AuthorID    uint   `json:"author_id"`
+	PublisherID uint   `json:"publisher_id"`
 }
 
-type BookUpdateReq struct {
-	Title    string `json:"title"`
-	Subtitle string `json:"subtitle"`
+type UpdateBook struct {
+	Title    string `json:"title" binding:"required,max=56"`
+	Subtitle string `json:"subtitle" binding:"required,max=64"`
 }
 
 func (o *BookCreateReq) FromEntity(item *dao.Book) {
@@ -26,7 +31,7 @@ func (o *BookCreateReq) FromEntity(item *dao.Book) {
 	o.Subtitle = item.Subtitle
 }
 
-func (o *BookCreateResp) BookRes(item *dao.Book) {
+func (o *BookDetailRes) BookRes(item *dao.Book) {
 	o.Title = item.Title
 	o.Subtitle = item.Subtitle
 }
@@ -38,7 +43,7 @@ func (o *BookCreateReq) ToEntity() dao.Book {
 	return item
 }
 
-func (o *BookUpdateReq) UpdateBook(item *dao.Book, id uint) {
+func (o *UpdateBook) UpdateBook(item *dao.Book, id uint) {
 	o.Title = item.Title
 	o.Subtitle = item.Subtitle
 }

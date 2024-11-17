@@ -10,6 +10,8 @@ var (
 	personService    *PersonService
 	publisherService *PublisherService
 	authorService    *AuthorService
+	bookService      *BookService
+	borrowService    *BorrowService
 )
 
 func SetupServices(cfg *config.Config) {
@@ -17,6 +19,8 @@ func SetupServices(cfg *config.Config) {
 	personService = newPersonService(repository.GetPersonRepo())
 	publisherService = newPublisherService(repository.GetPublisherRepo())
 	authorService = newAuthorService(repository.GetAuthorRepo())
+	bookService = NewBookService(repository.GetBookRepo())
+	borrowService = NewBorrowService(repository.GetBorrowRepo())
 }
 
 func GetAccountService() *AccountService {
@@ -37,4 +41,10 @@ func GetPublisherService() *PublisherService {
 
 func GetAuthorService() *AuthorService {
 	return authorService
+}
+func GetBookService() *BookService {
+	return bookService
+}
+func GetBorrowService() *BorrowService {
+	return borrowService
 }

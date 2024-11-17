@@ -7,6 +7,8 @@ var (
 	personRepo    *PersonRepository
 	publisherRepo *PublisherRespository
 	authorRepo    *AuthorRepository
+	bookRepo      *BookRepository
+	borrowRepo    *BorrowRepository
 )
 
 func SetupRepositories() {
@@ -15,7 +17,8 @@ func SetupRepositories() {
 	personRepo = newPersonRepository(db)
 	publisherRepo = newPublisherRepo(db)
 	authorRepo = newAuthorRepository(db)
-
+	bookRepo = NewRepository(db)
+	borrowRepo = NewBorrowRepository(db)
 }
 
 func GetAccountRepo() *AccountRepository {
@@ -32,4 +35,12 @@ func GetPublisherRepo() *PublisherRespository {
 
 func GetAuthorRepo() *AuthorRepository {
 	return authorRepo
+}
+
+func GetBookRepo() *BookRepository {
+	return bookRepo
+}
+
+func GetBorrowRepo() *BorrowRepository {
+	return borrowRepo
 }
